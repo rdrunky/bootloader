@@ -1,0 +1,6 @@
+label: dos
+size=8MiB, type=c
+size=8MiB, type=7
+type=5
+size=4MiB, type=c
+size=4MiB, type=7

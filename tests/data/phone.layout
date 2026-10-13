@@ -1,0 +1,5 @@
+system-a system 64 ext4 system b0070a00-5107-4a00-8000-00000000000a
+system-b system 64 ext4 system b0070b00-5107-4b00-8000-00000000000b
+recovery recovery 32 ext4 recovery b0070c00-2ec0-4c00-8000-00000000000c
+data data 32 ext4 data b0070d00-da7a-4d00-8000-00000000000d
+state state 1 raw - b0070e00-57a7-4e00-8000-00000000000e

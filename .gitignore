@@ -1,0 +1,12 @@
+build/
+__pycache__/
+*.pem
+*.key
+*.sig
+*.img
+*.bin
+*.elf
+*.o
+*.d
+.vscode/
+.idea/

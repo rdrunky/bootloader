@@ -44,4 +44,6 @@ For the Gentoo toolchain above, use `make CROSS=aarch64-unknown-linux-gnu-`.
 
 ## License
 
+Copyright (C) 2026 rdrunky
+
 GPL-2.0. See LICENSE.

@@ -42,6 +42,17 @@ The build generates the development signing key. Demo and test targets prepare d
 
 For the Gentoo toolchain above, use `make CROSS=aarch64-unknown-linux-gnu-`.
 
+## Donations
+
+If you want to support me and my project, feel free to donate. Any support would really help me upgrade my PC (currently running on an old i5-6600 with 12GB DDR4 RAM):
+
+- **BTC:** `bc1qzpvtleqhzqldpulh62hzwclvp3yfmf23f0pz6w`
+- **LTC:** `LdmacKCVqEf1prn1GtDemySiFbKeGaegzY`
+- **ETH:** `0x53dA4619B015E117a4124c656eb2E5182002Ea73`
+- **SOL:** `38wAjUhd6ioaLkS9FAw7UcLWDwuneXgxKvRtD86468Mf`
+
+**Goal:** $145 of $900 saved
+
 ## License
 
 Copyright (C) 2026 rdrunky

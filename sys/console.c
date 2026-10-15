@@ -49,7 +49,7 @@ static void history_spans(size_t limit, size_t *start, size_t *first, size_t *se
 	*second = kept - *first;
 }
 
-static void replay(struct console *console)
+void console_replay(struct console *console)
 {
 	size_t start;
 	size_t first;
@@ -104,7 +104,7 @@ void console_register(struct console *console)
 	}
 
 	console->next = NULL;
-	replay(console);
+	console_replay(console);
 	*tail = console;
 
 	printf("console %s ok\n", console->name);

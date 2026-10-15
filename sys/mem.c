@@ -225,6 +225,11 @@ int mem_allocate_random(uint64_t size, uint64_t align, const char *owner, uint64
 	return memmap_alloc_random(&map, size, align, owner, random, base);
 }
 
+int mem_release(uint64_t base, uint64_t size, const char *owner)
+{
+	return memmap_release_owned(&map, base, size, owner);
+}
+
 void mem_release_owner(const char *owner)
 {
 	if (map.count > 0) {

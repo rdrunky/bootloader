@@ -1,3 +1,5 @@
+#include <drivers/fwcfg.h>
+#include <drivers/ramfb.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -10,6 +12,7 @@
 #define REGISTERS_SIZE		0x18
 #define REGISTER_DATA		0x00
 #define REGISTER_SELECTOR	0x08
+#define REGISTER_DMA		0x10
 #define SELECT_SIGNATURE	0x0000
 #define SELECT_FILE_DIRECTORY	0x0019
 #define SIGNATURE		"QEMU"
@@ -42,11 +45,15 @@ static void fwcfg_read(void *buffer, size_t size)
 	}
 }
 
-static int fwcfg_find(const char *name, uint16_t *item, uint32_t *size)
+int fwcfg_lookup(const char *name, uint16_t *item, uint32_t *size)
 {
 	uint8_t count_bytes[4];
 	uint32_t count;
 	uint32_t i;
+
+	if (registers == 0) {
+		return -ENODEV;
+	}
 
 	fwcfg_select(SELECT_FILE_DIRECTORY);
 	fwcfg_read(count_bytes, sizeof(count_bytes));
@@ -69,6 +76,32 @@ static int fwcfg_find(const char *name, uint16_t *item, uint32_t *size)
 	return -ENOENT;
 }
 
+int fwcfg_dma_transfer(uint32_t control, uint32_t length, uint64_t address)
+{
+	static struct {
+		volatile uint32_t	control;
+		uint32_t		length;
+		uint64_t		address;
+	} __attribute__((packed, aligned(8))) dma;
+
+	if (registers == 0) {
+		return -ENODEV;
+	}
+
+	dma.control = __builtin_bswap32(control);
+	dma.length = __builtin_bswap32(length);
+	dma.address = __builtin_bswap64(address);
+
+	__asm__ volatile("dmb sy" ::: "memory");
+	*(volatile uint64_t *)(registers + REGISTER_DMA) = __builtin_bswap64((uint64_t)&dma);
+	__asm__ volatile("dmb sy" ::: "memory");
+
+	while ((__builtin_bswap32(dma.control) & ~FWCFG_DMA_CTL_ERROR) != 0) {
+	}
+
+	return (__builtin_bswap32(dma.control) & FWCFG_DMA_CTL_ERROR) != 0 ? -EIO : 0;
+}
+
 static int fwcfg_fuse_read(const char *name, void *buffer, size_t size, size_t *length)
 {
 	char path[FILE_NAME_SIZE];
@@ -80,7 +113,7 @@ static int fwcfg_fuse_read(const char *name, void *buffer, size_t size, size_t *
 		return -ENAMETOOLONG;
 	}
 
-	err = fwcfg_find(path, &item, &file_size);
+	err = fwcfg_lookup(path, &item, &file_size);
 	if (err != 0) {
 		return err;
 	}
@@ -127,6 +160,7 @@ static int fwcfg_probe(const struct dt *dt, int node)
 	}
 
 	fuse_register(&fwcfg_fuses);
+	ramfb_init();
 
 	return 0;
 }

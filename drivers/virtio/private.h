@@ -9,6 +9,7 @@
 #define VIRTIO_DEVICE_NET		1
 #define VIRTIO_DEVICE_BLOCK		2
 #define VIRTIO_DEVICE_RANDOM		4
+#define VIRTIO_DEVICE_INPUT		18
 
 #define VIRTIO_STATUS_ACKNOWLEDGE	0x01
 #define VIRTIO_STATUS_DRIVER		0x02
@@ -20,7 +21,7 @@
 
 #define VIRTQ_DESC_F_NEXT		1
 #define VIRTQ_DESC_F_WRITE		2
-#define VIRTQ_SIZE_MAX			16
+#define VIRTQ_SIZE_MAX			64
 #define VIRTQ_ALIGN			4096
 
 struct virtio_device;

@@ -61,6 +61,7 @@ endif
 TEST_CFLAGS := \
 	-std=gnu11 -O1 -g -Wall -Wextra -Werror -Wshadow \
 	$(SANITIZERS) -fno-omit-frame-pointer \
+	-ffunction-sections -fdata-sections -Wl,--gc-sections \
 	-I include -I tests/unit/harness \
 	-DTEST_DTB=\"$(TEST_DTB)\" -DTEST_GPT=\"$(TEST_GPT)\" -DTEST_MBR=\"$(TEST_MBR)\" \
 	-DTEST_TREE=\"$(TEST_TREE)\" -DTEST_EXT4=\"$(TEST_EXT4)\" -DTEST_EXT4_SMALL=\"$(TEST_EXT4_SMALL)\" \
@@ -70,6 +71,8 @@ TEST_CFLAGS := \
 TEST_SOURCES := \
 	tests/unit/harness/harness.c \
 	tests/unit/apps/bootcfg.c \
+	tests/unit/drivers/input.c \
+	tests/unit/drivers/ramfb.c \
 	tests/unit/lib/crypto.c \
 	tests/unit/lib/devicetree.c \
 	tests/unit/lib/fs.c \
@@ -79,6 +82,7 @@ TEST_SOURCES := \
 	tests/unit/lib/storage.c \
 	apps/boot/bootcfg.c \
 	apps/boot/convert.c \
+	drivers/qemu/ramfb/font.c \
 	lib/blockdev/blockdev.c \
 	lib/cksum/crc32.c \
 	lib/crypto/ed25519.c \
@@ -108,6 +112,12 @@ TEST_SOURCES := \
 	lib/partition/partition.c
 
 TEST_HEADERS := $(wildcard include/*.h include/*/*.h lib/*/*.h lib/*/*/*.h apps/boot/*.h tests/unit/harness/*.h)
+TEST_DRIVERS := \
+	drivers/qemu/ramfb/font.h \
+	drivers/qemu/ramfb/ramfb.c \
+	drivers/virtio/input.c \
+	drivers/virtio/private.h \
+	sys/console.c
 
 .PHONY: test smoke
 
@@ -117,7 +127,7 @@ test: $(TEST_UNIT) $(TEST_DATA)
 smoke: $(BIN) $(TEST_DATA)
 	python3 -B tests/smoke/run.py --image $(BIN) --qemu $(QEMU) --data $(TEST_BUILD) $(FILTER)
 
-$(TEST_UNIT): $(TEST_SOURCES) $(TEST_HEADERS)
+$(TEST_UNIT): $(TEST_SOURCES) $(TEST_HEADERS) $(TEST_DRIVERS)
 	@mkdir -p $(dir $@)
 	@echo "  HOSTCC  $@"
 	$(Q)$(HOST_CC) $(TEST_CFLAGS) $(TEST_SOURCES) -o $@

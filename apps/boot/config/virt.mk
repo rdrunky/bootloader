@@ -12,6 +12,7 @@ MODULES := \
 	drivers/power/psci \
 	drivers/primecell/pl011 \
 	drivers/qemu/fwcfg \
+	drivers/qemu/ramfb \
 	drivers/virtio \
 	lib/blockdev \
 	lib/cksum \

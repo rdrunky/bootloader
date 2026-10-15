@@ -6,7 +6,7 @@ Supports VirtIO over MMIO and PCI, MBR/GPT partitions, read-only EXT2/4 and FAT1
 
 Locked mode requires an Ed25519-signed `boot.cfg` and SHA-256 hashes for the kernel and any ramdisk. Developer mode allows unsigned configurations and manual booting. Policy and minimum configuration version come from QEMU's `fw_cfg`; the default policy is developer.
 
-Interrupting autoboot opens a serial shell for manual booting and diagnostics.
+Interrupting autoboot opens a shell for manual booting and diagnostics.
 
 ## Dependencies
 
@@ -31,14 +31,13 @@ emerge --ask app-emulation/qemu dev-python/cryptography sys-fs/e2fsprogs
 ## Usage
 
 ```sh
-make        # build binary (build/boot.bin)
-make demo   # run in QEMU with autoboot
-make phone  # run verified A/B boot in QEMU
-make test   # run host unit tests
-make smoke  # run QEMU integration scenarios
+make        # build the ARM64 binary (build/boot.bin)
+make run    # alias for make demo
+make demo   # run the autoboot demo in QEMU
+make phone  # run the A/B demo in QEMU (locked mode)
+make test   # run C unit tests on the host
+make smoke  # run integration tests in QEMU
 ```
-
-The build generates the development signing key. Demo and test targets prepare disk images, hashes and signatures automatically. `make phone` runs in locked mode. The integration tests boot the included ARM64 payload.
 
 For the Gentoo toolchain above, use `make CROSS=aarch64-unknown-linux-gnu-`.
 

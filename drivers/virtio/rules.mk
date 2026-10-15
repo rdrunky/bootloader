@@ -2,6 +2,7 @@ local_dir := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 OBJS += \
 	$(local_dir)/block.o \
+	$(local_dir)/input.o \
 	$(local_dir)/mmio.o \
 	$(local_dir)/net.o \
 	$(local_dir)/pci.o \

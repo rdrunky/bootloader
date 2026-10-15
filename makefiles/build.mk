@@ -48,8 +48,7 @@ $(BUILD)/%.o: %.S $(CONFIGS)
 	@echo "  AS      $<"
 	$(Q)$(CC) $(CFLAGS) -c $< -o $@
 
-run: $(BIN)
-	$(QEMU) $(QEMU_ARGS) $(QEMU_EXTRA) -nographic -kernel $(BIN)
+run: demo
 
 debug: $(BIN)
 	$(QEMU) $(QEMU_ARGS) $(QEMU_EXTRA) -nographic -kernel $(BIN) -s -S

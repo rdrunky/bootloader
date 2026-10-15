@@ -16,6 +16,7 @@ struct console {
 void console_init(void);
 void console_register(struct console *console);
 
+void console_replay(struct console *console);
 size_t console_history(char *buffer, size_t size);
 
 void console_write(const char *data, size_t len);

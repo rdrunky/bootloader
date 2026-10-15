@@ -174,11 +174,16 @@ static void print_summary(const char *target, const struct ping_summary *summary
 	printf("\n");
 }
 
-static void pause_between(struct netdev *dev, uint64_t start)
+static bool pause_between(struct netdev *dev, uint64_t start)
 {
 	while (time_us() - start < PING_INTERVAL_US) {
 		net_poll(dev);
+		if (console_poll() >= 0) {
+			return true;
+		}
 	}
+
+	return false;
 }
 
 COMMAND(ping, "address [count]", "send icmp echo requests, any key stops")
@@ -225,8 +230,8 @@ COMMAND(ping, "address [count]", "send icmp echo requests, any key stops")
 			break;
 		}
 
-		if (summary.sent < count) {
-			pause_between(dev, start);
+		if (summary.sent < count && pause_between(dev, start)) {
+			break;
 		}
 	}
 

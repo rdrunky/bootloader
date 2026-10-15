@@ -7,6 +7,7 @@ OBJS += \
 	$(local_dir)/commands/boot.o \
 	$(local_dir)/commands/debug.o \
 	$(local_dir)/commands/devices.o \
+	$(local_dir)/commands/display.o \
 	$(local_dir)/commands/files.o \
 	$(local_dir)/commands/memory.o \
 	$(local_dir)/commands/network.o \
